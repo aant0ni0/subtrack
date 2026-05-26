@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: subtrack
+      POSTGRES_PASSWORD: subtrack
+      POSTGRES_DB: subtrack
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://subtrack:subtrack@db:5432/subtrack
+      JWT_SECRET: change-this-secret-in-production
+      PORT: 3000
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
